@@ -144,6 +144,9 @@ public:
     void setWizardStyle(WizardStyle style);
     WizardStyle wizardStyle() const;
 
+    void setWizardConcise(bool on);
+    bool wizardConcise() const;
+
     void setOption(WizardOption option, bool on = true);
     bool testOption(WizardOption option) const;
     void setOptions(WizardOptions options);

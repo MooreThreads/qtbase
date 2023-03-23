@@ -36,7 +36,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
 #include "qwizard.h"
 #include <QtWidgets/private/qtwidgetsglobal_p.h>
 
@@ -75,7 +74,6 @@
 
 #include <string.h>     // for memset()
 #include <algorithm>
-
 QT_BEGIN_NAMESPACE
 
 // These fudge terms were needed a few places to obtain pixel-perfect results
@@ -257,6 +255,7 @@ public:
     bool subTitle;
     bool extension;
     bool sideWidget;
+    bool wizConcise;
 
     bool operator==(const QWizardLayoutInfo &other);
     inline bool operator!=(const QWizardLayoutInfo &other) { return !operator==(other); }
@@ -588,6 +587,7 @@ public:
         , minimumHeight(0)
         , maximumWidth(QWIDGETSIZE_MAX)
         , maximumHeight(QWIDGETSIZE_MAX)
+        , wizConcise(true)
     {
         std::fill(btns, btns + QWizard::NButtons, static_cast<QAbstractButton *>(0));
     }
@@ -686,6 +686,8 @@ public:
     int minimumHeight;
     int maximumWidth;
     int maximumHeight;
+
+    bool wizConcise;
 };
 
 static QString buttonDefaultText(int wstyle, int which, const QWizardPrivate *wizardPrivate)
@@ -719,6 +721,8 @@ static QString buttonDefaultText(int wstyle, int which, const QWizardPrivate *wi
 void QWizardPrivate::init()
 {
     Q_Q(QWizard);
+    if(wizConcise)
+        q->setWindowFlag(Qt::FramelessWindowHint);
 
     antiFlickerWidget = new QWizardAntiFlickerWidget(q, this);
     wizStyle = QWizard::WizardStyle(q->style()->styleHint(QStyle::SH_WizardStyle, 0, q));
@@ -744,12 +748,14 @@ void QWizardPrivate::init()
     pageVBoxLayout = new QVBoxLayout(pageFrame);
     pageVBoxLayout->setSpacing(0);
     pageVBoxLayout->addSpacing(0);
+    pageVBoxLayout->setContentsMargins(0,0,0,0);
     QSpacerItem *spacerItem = new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding);
     pageVBoxLayout->addItem(spacerItem);
 
     buttonLayout = new QHBoxLayout;
     mainLayout = new QGridLayout(antiFlickerWidget);
     mainLayout->setSizeConstraint(QLayout::SetNoConstraint);
+    mainLayout->setContentsMargins(2,2,2,2);
 
     updateButtonLayout();
 
@@ -955,6 +961,7 @@ QWizardLayoutInfo QWizardPrivate::layoutInfoForCurrentPage()
         info.buttonSpacing = 12;
 
     info.wizStyle = wizStyle;
+    info.wizConcise = wizConcise;
     if (info.wizStyle == QWizard::AeroStyle
 #if QT_CONFIG(style_windowsvista)
         && (QVistaHelper::vistaState() == QVistaHelper::Classic || vistaDisabled())
@@ -1006,6 +1013,10 @@ void QWizardPrivate::recreateLayout(const QWizardLayoutInfo &info)
     for (int i = mainLayout->rowCount() - 1; i >= 0; --i)
         mainLayout->setRowMinimumHeight(i, 0);
 
+    if(wizConcise){
+        mainLayout->addWidget(pageFrame, 0, 0);
+        return;
+    }
     /*
         Now, recreate it.
     */
@@ -1240,7 +1251,6 @@ void QWizardPrivate::recreateLayout(const QWizardLayoutInfo &info)
 
     if (classic)
         mainLayout->setRowMinimumHeight(row++, deltaVSpacing);
-
     mainLayout->addLayout(buttonLayout, row++, buttonStartColumn, 1, buttonNumColumns);
 
     if (info.watermark || info.sideWidget) {
@@ -1275,6 +1285,13 @@ void QWizardPrivate::updateLayout()
     disableUpdates();
 
     QWizardLayoutInfo info = layoutInfoForCurrentPage();
+    if(wizConcise){
+        info.header = false;
+        info.title = false;
+        info.subTitle = false;
+        info.extension = false;
+        info.sideWidget = false;
+    }
     if (layoutInfo != info)
         recreateLayout(info);
     QWizardPage *page = q->currentPage();
@@ -1526,7 +1543,6 @@ void QWizardPrivate::setButtonLayout(const QWizard::WizardButton *array, int siz
         } else if (which != QWizard::NoButton) {
             ensureButton(which);
             buttonLayout->addWidget(btns[which]);
-
             // Back, Next, Commit, and Finish are handled in _q_updateButtonStates()
             if (which != QWizard::BackButton && which != QWizard::NextButton
                 && which != QWizard::CommitButton && which != QWizard::FinishButton)
@@ -1535,7 +1551,9 @@ void QWizardPrivate::setButtonLayout(const QWizard::WizardButton *array, int siz
             if (prev)
                 QWidget::setTabOrder(prev, btns[which]);
             prev = btns[which];
-        }
+            if(wizConcise)
+                btns[which]->hide();
+        }        
     }
 
     _q_updateButtonStates();
@@ -1681,6 +1699,9 @@ void QWizardPrivate::_q_emitCustomButtonClicked()
 
 void QWizardPrivate::_q_updateButtonStates()
 {
+    if(wizConcise)
+        return;
+
     Q_Q(QWizard);
 
     disableUpdates();
@@ -2209,6 +2230,7 @@ QWizard::QWizard(QWidget *parent, Qt::WindowFlags flags)
     : QDialog(*new QWizardPrivate, parent, flags)
 {
     Q_D(QWizard);
+
     d->init();
 }
 
@@ -2593,6 +2615,19 @@ QWizard::WizardStyle QWizard::wizardStyle() const
 {
     Q_D(const QWizard);
     return d->wizStyle;
+}
+
+void QWizard::setWizardConcise(bool on)
+{
+    Q_D(QWizard);
+    d->wizConcise = on;
+    d->updateLayout();
+}
+
+bool QWizard::wizardConcise() const
+{
+    Q_D(const QWizard);
+    return d->wizConcise;
 }
 
 /*!
