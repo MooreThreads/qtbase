@@ -5,31 +5,44 @@ The Qt component used in the PES Installer (PES安装程序) is statically linke
 The following Qt components are licensed under GNU Lesser General Public License, version 3
 1. Qt Core
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the source code of the Qt component from: https://github.com/qt/qtbase/tree/v6.2.1/src/corelib
+You can obtain the source code of the Qt component from: 
+https://github.com/qt/qtbase/tree/v6.2.1/src/corelib
+https://github.com/qt/qtbase/tree/v6.5.3/src/corelib
 
 2. Qt Gui
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the source code of the Qt component from: https://github.com/qt/qtbase/tree/v6.2.1/src/gui
+You can obtain the source code of the Qt component from: 
+https://github.com/qt/qtbase/tree/v6.2.1/src/gui
+https://github.com/qt/qtbase/tree/v6.5.3/src/gui
 
 3. Qt Widgets
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the source code of the Qt component from: https://github.com/qt/qtbase/tree/v6.2.1/src/widgets
+You can obtain the source code of the Qt component from: 
+https://github.com/qt/qtbase/tree/v6.2.1/src/widgets
+https://github.com/qt/qtbase/tree/v6.5.3/src/widgets
 
 4. Qt Network
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the source code of the Qt component from: https://github.com/qt/qtbase/tree/v6.2.1/src/network
+You can obtain the source code of the Qt component from:
+https://github.com/qt/qtbase/tree/v6.2.1/src/network
+https://github.com/qt/qtbase/tree/v6.5.3/src/network
 
 5. Qt OpenGL
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the source code of the Qt component from: https://github.com/qt/qtbase/tree/v6.2.1/src/opengl
+You can obtain the source code of the Qt component from:
+https://github.com/qt/qtbase/tree/v6.2.1/src/opengl
+https://github.com/qt/qtbase/tree/v6.5.3/src/opengl
 
 6. Qt QML
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the source code of the Qt component from: https://github.com/qt/qtdeclarative/tree/dev/src/qml
+You can obtain the source code of the Qt component from: 
+https://github.com/qt/qtdeclarative/tree/dev/src/qml
 
 7. Qt Webengine quick
 Copyright （c）2016 The Qt Company Ltd.
-You can obtain the third party components information from: https://doc.qt.io/qt-6.2/qtwebengine-licensing.html
+You can obtain the third party components information from: 
+https://doc.qt.io/qt-6.2/qtwebengine-licensing.html
+https://doc.qt.io/qt-6.5/qtwebengine-licensing.html
 You can obtain the source code of the Qt component from: https://github.com/qt/qtwebengine
 
 GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007
